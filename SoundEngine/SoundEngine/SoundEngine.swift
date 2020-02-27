@@ -201,6 +201,8 @@ public class SoundEngine {
 
     
     private func configureAudioSession() {
+
+        crashFixMaybe()
         
         do {
             try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
@@ -434,5 +436,11 @@ public class SoundEngine {
         
         fadeOutDisplayLink?.invalidate()
         fadeOutDisplayLink = nil
+    }
+
+    private func crashFixMaybe() {
+        guard let audioUnit = engine.inputNode.audioUnit else { return }
+        AudioOutputUnitStop(audioUnit)
+        AudioUnitUninitialize(audioUnit)
     }
 }
