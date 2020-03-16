@@ -382,6 +382,11 @@ public class SoundEngine {
                 player.stop()
             }
         })
+
+        // Make absolutely sure that the engine is running
+        guard engine.isRunning else {
+            return
+        }
         player.play()
     }
     
