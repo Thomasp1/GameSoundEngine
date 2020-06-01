@@ -264,19 +264,20 @@ public class SoundEngine {
     }
     
     private func restartEngine() {
-        
-        if !engine.isRunning {
-            do {
-                try engine.start()
-            } catch {
-                print("AVAudioEngine did not start")
+        DispatchQueue.main.async {
+            if !self.engine.isRunning {
+                do {
+                    try self.engine.start()
+                } catch {
+                    print("AVAudioEngine did not start")
+                }
             }
-        }
-        
-        if AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint {
-            backgroundMusicPlayer.volume = 0.0
-        } else {
-            backgroundMusicPlayer.volume = backgroundMusicVolume
+            
+            if AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint {
+                self.backgroundMusicPlayer.volume = 0.0
+            } else {
+                self.backgroundMusicPlayer.volume = self.backgroundMusicVolume
+            }
         }
     }
     
@@ -384,10 +385,9 @@ public class SoundEngine {
         })
 
         // Make absolutely sure that the engine is running
-        guard engine.isRunning else {
-            return
+        DispatchQueue.main.async {
+            if self.engine.isRunning { player.play() }
         }
-        player.play()
     }
     
     private func loopBackgroundMusic(file: AVAudioFile) {
